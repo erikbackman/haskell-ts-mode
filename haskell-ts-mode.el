@@ -53,7 +53,17 @@
 
    :language 'haskell
    :feature 'function
-   `((signature name: (variable) @font-lock-function-name-face)))
+   `((signature name: (variable) @font-lock-function-name-face))
+
+   :language 'haskell
+   :feature 'variable
+   `((pat_name (variable) @font-lock-variable-face)
+     (exp_name (variable) @font-lock-variable-face))
+
+   :language 'haskell
+   :feature 'comment
+   `((comment) @font-lock-comment-face
+     (comment) @contextual))
   "Tree-sitter font-lock settings for `haskell-ts-mode'.")
 
 
@@ -79,7 +89,7 @@
   ;; Font-lock.
   (setq-local treesit-font-lock-settings haskell-ts-mode--treesit-font-lock-settings)
   (setq-local treesit-font-lock-feature-list
-	      '(( type keyword include definition function constant )))
+	      '(( type keyword include definition function variable comment )))
     
   (treesit-major-mode-setup))
 
