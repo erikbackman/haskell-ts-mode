@@ -1,5 +1,5 @@
 * haskell-ts-mode
 
-Emacs major mode for for Haskell tree-sitter support using treesit in Emacs 29.
+Emacs major mode for Haskell tree-sitter support using treesit in Emacs 29.
 
 *WIP!*
