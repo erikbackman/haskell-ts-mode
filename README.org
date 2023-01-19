@@ -2,4 +2,4 @@
 
 Emacs major mode for Haskell tree-sitter support using treesit in Emacs 29.
 
-*WIP!*
+*WIP! Not ready for use.*
