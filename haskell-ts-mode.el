@@ -24,13 +24,21 @@
 ;;; Code:
 
 (require 'treesit)
-(eval-when-compile (require 'rx))
 (require 'haskell-mode)
+(eval-when-compile (require 'rx))
 
 (declare-function treesit-parser-create "treesit.c")
 
 (defvar haskell-ts-mode--keywords
-  '("module" "import" "if" "then" "else" "case" "of" "data" "let" (where))
+  '("module" "import" "data" "let" (where))
+  "Keywords for `haskell-ts-mode'.")
+
+(defvar haskell-ts-mode--keywords-conditional
+  '("if" "then" "else" "case" "of")
+  "Keywords for `haskell-ts-mode'.")
+
+(defvar haskell-ts-mode--keywords-include
+  '("import" "qualified" "module" "as")
   "Keywords for `haskell-ts-mode'.")
 
 ;;;###autoload
@@ -38,13 +46,13 @@
   (treesit-font-lock-rules
 
    :language 'haskell
-   :feature 'keyword
+   :feature 'keywords
    `([,@haskell-ts-mode--keywords] @font-lock-keyword-face)
 
    :language 'haskell
    :feature 'include
    `((import) (module) (module) @font-lock-type-face
-     ["import" "qualified" "module" "as"] @font-lock-keyword-face)
+     [,@haskell-ts-mode--keywords-include] @font-lock-keyword-face)
 
    :language 'haskell
    :feature 'type
@@ -63,9 +71,13 @@
    :language 'haskell
    :feature 'comment
    `((comment) @font-lock-comment-face
-     (comment) @contextual))
-  "Tree-sitter font-lock settings for `haskell-ts-mode'.")
+     (comment) @contextual)
 
+   :language 'haskell
+   :feature 'conditional
+   `([,@haskell-ts-mode--keywords-conditional] @font-lock-keyword-face)
+   )
+  "Tree-sitter font-lock settings for `haskell-ts-mode'.")
 
 ;;;###autoload
 (define-derived-mode haskell-ts-mode haskell-mode "Haskell (TS)"
@@ -77,7 +89,7 @@
 
   (treesit-parser-create 'haskell)
 
-  ;; Navigation
+;  Navigation
   (setq-local treesit-defun-type-regexp
               (rx (or "function_definition"
                       "struct_definition")))
@@ -89,7 +101,7 @@
   ;; Font-lock.
   (setq-local treesit-font-lock-settings haskell-ts-mode--treesit-font-lock-settings)
   (setq-local treesit-font-lock-feature-list
-	      '(( type keyword include definition function variable comment )))
+	      '(( type keyword include definition function variable comment conditional )))
     
   (treesit-major-mode-setup))
 
